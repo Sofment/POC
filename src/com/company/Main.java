@@ -24,15 +24,9 @@ public class Main {
 
         testHelper.getSettingsHelper().openSettings();
         testHelper.sleep(1000);
-        testHelper.getSettingsHelper().openSoundSettings();
+        testHelper.getSettingsHelper().openApplicationSettings();
         testHelper.sleep(1000);
-        testHelper.getSettingsHelper().openSyncSettings();
-        testHelper.sleep(1000);
-        testHelper.getSettingsHelper().openUserDictionarySettings();
-        testHelper.sleep(1000);
-        testHelper.getSettingsHelper().openWifiSettings();
-        testHelper.sleep(1000);
-        testHelper.getSettingsHelper().openWirelessSettings();
+        testHelper.getSettingsHelper().openApplicationDetails("com.entradahealth.entrada.android");
         testHelper.sleep(1000);
     }
 }
