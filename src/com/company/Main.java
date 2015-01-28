@@ -6,6 +6,7 @@ import net.bugs.testhelper.TestHelper;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 import static net.bugs.testhelper.helpers.LoggerUtil.i;
 
@@ -22,11 +23,25 @@ public class Main {
 //        gMailSender.addAttachment("rail_content.html");
 //        gMailSender.send();
 
-        testHelper.getSettingsHelper().openSettings();
-        testHelper.sleep(1000);
-        testHelper.getSettingsHelper().openApplicationSettings();
-        testHelper.sleep(1000);
-        testHelper.getSettingsHelper().openApplicationDetails("com.entradahealth.entrada.android");
-        testHelper.sleep(1000);
+//        testHelper.getSettingsHelper().openSettings();
+//        testHelper.sleep(1000);
+//        testHelper.getSettingsHelper().openApplicationSettings();
+//        testHelper.sleep(1000);
+//        testHelper.getSettingsHelper().openApplicationDetails("com.entradahealth.entrada.android");
+//        testHelper.sleep(1000);
+
+        ArrayList<String> files = testHelper.getAdb().getShell().getFilesList("/data/local/tmp/");
+
+        for (String file : files) {
+            i(file);
+        }
+
+        testHelper.getAdb().getShell().removeFile("/data/local/tmp/GoBrotiumHelper.jar");
+        files = testHelper.getAdb().getShell().getFilesList("/data/local/tmp/");
+
+        i("");
+        for (String file : files) {
+            i(file);
+        }
     }
 }
