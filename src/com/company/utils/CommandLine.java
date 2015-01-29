@@ -37,7 +37,8 @@ public class CommandLine {
      */
     public CommandLine(String[] args) {
         this.args = args;
-        parseCommandLine();
+        if (args != null)
+            parseCommandLine();
     }
 
     private void parseCommandLine() {
