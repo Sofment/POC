@@ -4,7 +4,6 @@ import com.company.app.ConfigManager;
 import com.company.app.TestManager;
 import com.company.enums.TestNamesEnum;
 import com.company.model.Device;
-import com.company.utils.ConfigParameter;
 import com.company.utils.Constant;
 import com.company.utils.Runner;
 import net.bugs.testhelper.TestHelper;
@@ -58,11 +57,14 @@ public class Test {
     }
 
     public void tc122() {
+
         if(Runner.isInstalledApk(Constant.PACKAGE_APP, device.getId())) {
-            Runner.runProcess(new String[]{"adb", "-s", device.getId(), "uninstall", Constant.PACKAGE_APP}, true);
+            testHelper.getAdb().unInstall(Constant.PACKAGE_APP);
+//            Runner.runProcess(new String[]{"adb", "-s", device.getId(), "uninstall", Constant.PACKAGE_APP}, true);
         }else {
-            Runner.runProcess(new String[]{"adb", "-s", device.getId(), "install",
-                    configManager.getProperty(ConfigParameter.PATH_TO_APK.name())}, true);
+            testHelper.getAdb().install(Constant.PACKAGE_APP);
+//            Runner.runProcess(new String[]{"adb", "-s", device.getId(), "install",
+//                    configManager.getProperty(ConfigParameter.PATH_TO_APK.name())}, true);
         }
     }
 
