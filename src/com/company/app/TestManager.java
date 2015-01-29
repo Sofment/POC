@@ -18,7 +18,7 @@ public class TestManager {
     private TestManager(String[] args) {
         commandLine = new CommandLine(args);
         device = new Device(commandLine.getDeviceId());
-        testHelper = new TestHelper(commandLine.getDeviceId());
+        testHelper = new TestHelper("config.properties", commandLine.getDeviceId());
         configManager = new ConfigManager();
     }
 
