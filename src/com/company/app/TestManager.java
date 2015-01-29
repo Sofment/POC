@@ -11,6 +11,7 @@ public class TestManager {
     private static volatile TestManager instance;
     private static String[] arguments = null;
     private TestHelper testHelper;
+    private ConfigManager configManager;
     private CommandLine commandLine;
     private Device device;
 
@@ -18,6 +19,7 @@ public class TestManager {
         commandLine = new CommandLine(args);
         device = new Device(commandLine.getDeviceId());
         testHelper = new TestHelper(commandLine.getDeviceId());
+        configManager = new ConfigManager();
     }
 
     public static TestManager getInstance() {
@@ -32,6 +34,10 @@ public class TestManager {
                     instance = new TestManager(arguments);
             }
         return instance;
+    }
+
+    public ConfigManager getConfigManager() {
+        return configManager;
     }
 
     public Device getDevice() {

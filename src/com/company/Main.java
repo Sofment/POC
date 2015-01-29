@@ -1,6 +1,7 @@
 package com.company;
 
 import com.company.app.TestManager;
+import com.company.test.Test;
 import net.bugs.testhelper.TestHelper;
 
 import java.util.ArrayList;
@@ -11,6 +12,8 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
         TestManager testManager = TestManager.getInstance(args);
+        Test test = new Test();
+        test.tc122();
     }
 
     private static void test1(String[] args){

@@ -12,7 +12,6 @@ public class Runner {
 
     public static boolean isInstalledApk(String pkg, String deviceId) {
         String[] command = new String[]{"adb", "-s", deviceId, "shell", "pm", "list", "packages", "|", "grep", pkg};
-        i("Run process:" + Arrays.toString(command).replaceAll(",", ""));
         boolean isInstalled = runProcess(command, pkg);
         if(isInstalled) {
             i("Build with pkg:" + pkg + " is installed on device");
@@ -22,7 +21,7 @@ public class Runner {
     }
 
     public static boolean runProcess(final String[] command, String waitLine) {
-        i("Run process:" + Arrays.toString(command));
+        i("Run process:" + Arrays.toString(command).replaceAll(",", ""));
         boolean isSuccessProcess = false;
         Process process = null;
         InputStream is = null;
@@ -63,7 +62,7 @@ public class Runner {
         return isSuccessProcess;
     }
 
-    public Process runProcess(final String[] command, boolean isWaitForProcess) {
+    public static Process runProcess(final String[] command, boolean isWaitForProcess) {
         i("Run process:" + Arrays.toString(command).replaceAll(",", ""));
         Process process = null;
         InputStream is = null;
