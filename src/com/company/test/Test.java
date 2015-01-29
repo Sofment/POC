@@ -36,6 +36,8 @@ public class Test {
     public void startTest(String testName) {
         if(testName.equalsIgnoreCase(TestNamesEnum.TC265.name())) {
             this.tc265();
+        } else if(testName.equalsIgnoreCase(TestNamesEnum.TC121.name())) {
+            this.tc122();
         }
     }
 
