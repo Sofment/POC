@@ -11,6 +11,7 @@ public class CommandLine {
     private String[] args;
     private String deviceId;
     private String[] parameters;
+    private String testName;
 
     public static String message = "----------------------------------------------------------------------\n" +
             "AutomationTestRail.jar parameters:\n" +
@@ -52,6 +53,7 @@ public class CommandLine {
         i("Arguments: " + arguments);
         parameters = arguments.split(" ");
         setDeviceId(null);
+        this.testName = searchValue(Constant.TEST_NAME);
     }
 
     private String validateArgsCount(String arguments) {
@@ -76,25 +78,30 @@ public class CommandLine {
 
     private String searchValue(String key) {
         for (int i = 0; i < parameters.length; i++) {
-            if(parameters[i].equals(key))
+            if(parameters[i].equalsIgnoreCase(key))
                 return parameters[i+1];
         }
         return null;
     }
 
     public String getDeviceId() {
-        return deviceId;
+        return this.deviceId;
+    }
+
+    public String getTestName() {
+        return this.testName;
     }
 
     public void setDeviceId(String deviceId) {
         if(deviceId != null) {
             this.deviceId = deviceId;
         } else {
-            this.deviceId = searchValue(Constant.deviceId);
+            this.deviceId = searchValue(Constant.DEVICE_ID);
         }
     }
 
     public static class Constant {
-        public static final String deviceId = "deviceId";
+        public static final String DEVICE_ID = "deviceId";
+        public static final String TEST_NAME = "testName";
     }
 }
