@@ -43,13 +43,35 @@ public class CommandLine {
 
     private void parseCommandLine() {
         String arguments = Arrays.toString(args);
+
+        arguments = validateArgsCount(arguments);
         arguments = arguments.replace("[", "");
         arguments = arguments.replace("]", "");
         arguments = arguments.replaceAll(",", "");
-        arguments.replaceAll("-e", "");
+
         i("Arguments: " + arguments);
         parameters = arguments.split(" ");
         setDeviceId(null);
+    }
+
+    private String validateArgsCount(String arguments) {
+        if(args.length % 3 != 0) {
+            i("Looks like you put wrong parameters.\n" +
+                    "usage: \n" +
+                    "-e key value");
+        }
+        int validArgsCount = args.length / 3;
+        int currentArgsCount = 0;
+        while (arguments.contains("-e")) {
+            arguments = arguments.replace("-e", "");
+            currentArgsCount ++;
+        }
+        if(currentArgsCount != validArgsCount) {
+            i("Looks like you put wrong parameters.\n" +
+                    "usage: \n" +
+                    "-e key value");
+        }
+        return arguments;
     }
 
     private String searchValue(String key) {
