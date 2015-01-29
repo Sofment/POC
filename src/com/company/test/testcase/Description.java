@@ -25,4 +25,52 @@ public class Description {
             "    A. Do you want to uninstall this app? Cancel and OK buttons are displayed.\n" +
             "    B. Application will display un-installing while it is removing the application and all data. Once deleted, Entrada icon is removed from the applications list.\n" +
             "##############################################################################\n";
+
+        public static final String TC122 = "\n##############################################################################\n" +
+                "TC122 - android_entrada_Install_Install\n" +
+                "##############################################################################\n" +
+                "\n" +
+                "The following test will install a new version of android-entrada to the device\n" +
+                "\n" +
+                "Test steps\n" +
+                "\n" +
+                "1. Verify no install of android-entrada is installed on device \n" +
+                "2. Access or tap APK file \n" +
+                "3. Tap Next button \n" +
+                "4. Tap Install button \n" +
+                "Result A \n" +
+                "5. Tap Done button \n" +
+                "Result B\n" +
+                "\n" +
+                "Expected result\n" +
+                "\n" +
+                "A. Entrada Installing window will be displayed while it installs. App installed displays when completed. \n" +
+                "B. Install is complete. Icon will be placed on the device home screen."
+                + "\n##############################################################################\n";
+
+        public static final String TC266 = "\n##############################################################################\n" +
+                "TC266 - android-entrada_Install_Cancel\n" +
+                "##############################################################################\n" +
+                "\n" +
+                "The following test will verify the ability to cancel the install of the Entrada android application at various cancel points during it.\n" +
+                "\n" +
+                "Test steps\n" +
+                "\n" +
+                "1. Verify no install of android-entrada is installed on device \n" +
+                "2. Tap the .apk file \n" +
+                "Result A \n" +
+                "3. Click the Cancel button \n" +
+                "Result B \n" +
+                "4. Tap the .apk file \n" +
+                "5. Tap the Next button \n" +
+                "6. Tap the Cancel button \n" +
+                "Result C\n" +
+                "\n" +
+                "Expected result\n" +
+                "\n" +
+                "A. Do you want to install this application? IT will get access to: window will be displayed. Cancel and Next button will be displayed. \n" +
+                "B. Install will be cancelled. .apk file will be displayed. \n" +
+                "C. Install will be cancelled. .apk file will be displayed"
+                + "\n##############################################################################\n";
+
 }

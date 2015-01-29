@@ -109,4 +109,76 @@ public class TestCaseHelper {
     public void takeScreenShot(String name) {
         testHelper.takeScreenshot(name, screenShotFolder);
     }
+
+    public void enableInstallationFromUnknownSources() {
+        View settingsButton = testHelper.getViewByText("Settings", false);
+        settingsButton.click();
+        if(!testHelper.waitForExistsByText("Security", 10000, true)) {
+            takeScreenShot("text_Security_is_not_found");
+            i("text Security is not found");
+            System.exit(0);
+        }
+        View unknownSources = findUnKnownSources();
+        if(unknownSources != null && unknownSources.exists()) {
+            i("click on unknown sources");
+            unknownSources.click();
+            if(!testHelper.waitForExistsByText("cancel", 10000, false)) {
+                takeScreenShot("unknown_sources_dialog");
+                System.exit(0);
+            }
+            View ok = testHelper.getViewByText("OK", false, false);
+            if(!ok.exists()) {
+                takeScreenShot("unknown_sources_dialog");
+                System.exit(0);
+            }
+            ok.click();
+            testHelper.pressBack();
+        }
+    }
+
+    private View findUnKnownSources() {
+        int height = testHelper.getScreenHeight();
+        int width = testHelper.getScreenWidth();
+
+        View unknownSources = testHelper.getViewByText("Unknown sources");
+        if(unknownSources.exists()) return unknownSources;
+
+        ArrayList<View> textViews = testHelper.getCurrentViews(android.widget.TextView.class.getName(), false, false);
+        ArrayList<View> newTextViews;
+        while(true) {
+            testHelper.swipe(width/2, height/2 + height/5, width/2, height/2 - height/5);
+            newTextViews = testHelper.getCurrentViews(android.widget.TextView.class);
+            if(!changeScreen(newTextViews, textViews)) break;
+            textViews.clear();
+            textViews.addAll(newTextViews);
+            unknownSources = testHelper.getViewByText("Unknown sources");
+            if(unknownSources.exists()) return unknownSources;
+        }
+
+        textViews.clear();
+        textViews.addAll(newTextViews);
+
+        while(true) {
+            testHelper.swipe(width/2, height/2 - height/5, width/2, height/2 + height/5);
+            newTextViews = testHelper.getCurrentViews(android.widget.TextView.class);
+            if(!changeScreen(newTextViews, textViews)) break;
+            textViews.clear();
+            textViews.addAll(newTextViews);
+            unknownSources = testHelper.getViewByText("Unknown sources");
+            if(unknownSources.exists()) return unknownSources;
+        }
+
+        return null;
+    }
+
+    public void waitTextAndClick(String text, boolean isFullMatch) {
+        if(!testHelper.waitForExistsByText(text, 10000, isFullMatch)) {
+            i(text + " does not exist");
+            takeScreenShot(text + "_is_not_found");
+            System.exit(0);
+        }
+        View next = testHelper.getViewByText(text, isFullMatch, false);
+        i("click on text: " + text);
+        next.click();
+    }
 }

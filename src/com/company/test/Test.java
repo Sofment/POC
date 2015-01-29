@@ -6,7 +6,6 @@ import com.company.enums.TestNamesEnum;
 import com.company.model.Device;
 import com.company.test.testcase.Description;
 import com.company.test.testcase.TestCaseHelper;
-import com.company.utils.ConfigParameter;
 import com.company.utils.Constant;
 import com.company.utils.Runner;
 import net.bugs.testhelper.TestHelper;
@@ -36,7 +35,7 @@ public class Test {
     public void startTest(String testName) {
         if(testName.equalsIgnoreCase(TestNamesEnum.TC265.name())) {
             this.tc265();
-        } else if(testName.equalsIgnoreCase(TestNamesEnum.TC121.name())) {
+        } else if(testName.equalsIgnoreCase(TestNamesEnum.TC122.name())) {
             this.tc122();
         }
     }
@@ -77,15 +76,61 @@ public class Test {
     }
 
     public void tc122() {
+        i(Description.TC122);
+
+        TestCaseHelper testCaseHelper = new TestCaseHelper(testHelper);
 
         if(Runner.isInstalledApk(Constant.PACKAGE_APP, device.getId())) {
             testHelper.getAdb().unInstall(Constant.PACKAGE_APP);
 //            Runner.runProcess(new String[]{"adb", "-s", device.getId(), "uninstall", Constant.PACKAGE_APP}, true);
-        }else {
-            testHelper.getAdb().install(Constant.PACKAGE_APP);
-//            Runner.runProcess(new String[]{"adb", "-s", device.getId(), "install",
-//                    configManager.getProperty(ConfigParameter.PATH_TO_APK.name())}, true);
         }
+        testHelper.getAdb().push("entrada-5.3.32-aligned.apk", "/sdcard/");
+        testHelper.getSettingsHelper().openInstallationWindow("/sdcard/entrada-5.3.32-aligned.apk");
+        if(testHelper.waitForExistsByText("Settings", 3000, false)) {
+            testCaseHelper.enableInstallationFromUnknownSources();
+            if(isFirstLaunch) {
+                isFirstLaunch = false;
+                tc122();
+                return;
+            }
+            i("Can not enable settings to install application from unknown sources");
+            testCaseHelper.takeScreenShot("testcase_fail");
+            System.exit(0);
+        }
+
+        testCaseHelper.waitTextAndClick("next", false);
+        testCaseHelper.waitTextAndClick("Install", true);
+        if(testHelper.waitForExistsByText("installing", 10000, false)) {
+            i("installing dialog is appeared");
+            testCaseHelper.takeScreenShot("installing_dialog_pass");
+        } else {
+            i("installing dialog did not appear");
+            testCaseHelper.takeScreenShot("installing_dialog_fail");
+            System.exit(0);
+        }
+
+
+        if(testHelper.waitForExistsByText("App installed", 10000, false)) {
+            i("install completed dialog is appeared");
+            testCaseHelper.takeScreenShot("install_completed_dialog_pass");
+        } else {
+            i("install completed dialog did not appear");
+            testCaseHelper.takeScreenShot("install__completed_dialog_fail");
+            System.exit(0);
+        }
+
+        View done = testHelper.getViewByText("done", false, false);
+        done.click();
+
+        testHelper.pressHome();
+        if(testCaseHelper.findEntradaApplication(testHelper.getCurrentViews(android.widget.TextView.class))){
+            i("Entrada application is installed, icon is found");
+            testCaseHelper.takeScreenShot("entrada_icon_is_found");
+        } else {
+            i("Entrada application is installed, icon is not found");
+            testCaseHelper.takeScreenShot("entrada_icon_is_not_found");
+        }
+
     }
 
 }
