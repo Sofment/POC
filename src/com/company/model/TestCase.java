@@ -56,7 +56,7 @@ public class TestCase {
 
     public String getReportRow(int index) {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(String.format(HtmlPattern.HTMLStyleSingleCellPattern, "align=\"center\"", ++index));
+        stringBuilder.append(String.format(HtmlPattern.HTMLStyleSingleCellPattern, "rowspan=\"" + (expectedResults.size() + 1) + "\" align=\"center\"", ++index));
         stringBuilder.append(String.format(HtmlPattern.HTMLStyleSingleCellPattern, "align=\"center\"", this.id));
         stringBuilder.append(String.format(HtmlPattern.HTMLSingleCellPattern, this.name));
 
@@ -70,8 +70,8 @@ public class TestCase {
 
         for (int currentIndex = 0; currentIndex < expectedResults.size(); currentIndex ++) {
             stringBuilder = new StringBuilder();
-            if(currentIndex == 0)
-                stringBuilder.append(String.format(HtmlPattern.HTMLStyleSingleCellPattern, "rowspan=\"" + expectedResults.size() + "\" align=\"center\"", ""));
+//            if(currentIndex == 0)
+//                stringBuilder.append(String.format(HtmlPattern.HTMLStyleSingleCellPattern, "rowspan=\"" + expectedResults.size() + "\" align=\"center\"", ""));
             stringBuilder.append(String.format(HtmlPattern.HTMLStyleSingleCellPattern, " colspan=\"2\"", expectedResults.get(currentIndex).getDescription()));
             formatRaw = (result = expectedResults.get(currentIndex).getResult()) ? HtmlPattern.HTMLSinglePassedCellPattern : HtmlPattern.HTMLSingleFailedCellPattern;
 
