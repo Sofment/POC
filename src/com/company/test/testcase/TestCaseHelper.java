@@ -1,5 +1,8 @@
 package com.company.test.testcase;
 
+import com.company.model.TestCase;
+import com.company.utils.Constant;
+import com.company.utils.Runner;
 import net.bugs.testhelper.TestHelper;
 import net.bugs.testhelper.view.View;
 
@@ -20,13 +23,13 @@ public class TestCaseHelper {
         this.screenShotFolder = testHelper.propertiesManager.getProperty("PATH_TOP_SCREEN_SHOT_FOLDER");
     }
 
-    public void uninstallEntrada() {
+    public boolean uninstallEntrada(TestCase testCase) {
         testHelper.getSettingsHelper().openApplicationDetails("com.entradahealth.entrada.android");
         if(!testHelper.waitForExistsByText("Uninstall", 10000, false)) {
             i("uninstall button is not found");
             takeScreenShot(System.currentTimeMillis() + "_" +
                     "uninstall_button_is_not_found_fail");
-            System.exit(0);
+            return false;
         }
         View uninstallButton = testHelper.getViewByText("Uninstall", false, false);
         i("click on uninstall button");
@@ -35,27 +38,34 @@ public class TestCaseHelper {
         if(testHelper.waitForExistsByText("Cancel", 10000, false)
                 && testHelper.waitForExistsByText("ok", 1, false)){
             i("Uninstall dialog appeared");
+            testCase.addExpectedResult(new ExpectedResult("Do you want to uninstall this app? Cancel and OK buttons are displayed.", true));
             takeScreenShot(System.currentTimeMillis() + "_" +
                     "uninstall_dialog_appeared_pass");
         } else {
             i("Uninstall dialog did not appear");
             takeScreenShot(System.currentTimeMillis() + "_" +
                     "uninstall_dialog_did_not_appear_fail");
-            System.exit(0);
+            testCase.addExpectedResult(new ExpectedResult("Do you want to uninstall this app? Cancel and OK buttons are displayed.", false));
+
+            return false;
         }
         View okButton = testHelper.getViewByText("ok", false);
         okButton.click();
         testHelper.sleep(5000);
         ArrayList<View> views = testHelper.getCurrentViews(android.widget.TextView.class);
         if(findEntradaApplication(views)) {
+            testCase.addExpectedResult(new ExpectedResult("Application will display un-installing while it is removing the application and all data. Once deleted, Entrada icon is removed from the applications list", false));
+
             i("Entrada application is not uninstalled");
             takeScreenShot(System.currentTimeMillis() + "_" +
                     "entrada_is_not_uninstalled_fail");
         } else {
             i("Entrada application is uninstalled");
+            testCase.addExpectedResult(new ExpectedResult("Application will display un-installing while it is removing the application and all data. Once deleted, Entrada icon is removed from the applications list", true));
             takeScreenShot(System.currentTimeMillis() + "_" +
                     "entrada_is_uninstalled_pass");
         }
+        return true;
     }
 
     public boolean findEntradaApplication(ArrayList<View> textViews) {
@@ -72,7 +82,7 @@ public class TestCaseHelper {
             views = testHelper.getCurrentViews(android.widget.TextView.class);
             takeScreenShot(System.currentTimeMillis() + "_" +
                     "application list");
-            if(!changeScreen(textViews, views)) break;
+            if(!isScreenChanged(textViews, views)) break;
             textViews.clear();
             textViews.addAll(views);
             if(checkEntradaIcon(views)) return true;
@@ -82,7 +92,7 @@ public class TestCaseHelper {
             views = testHelper.getCurrentViews(android.widget.TextView.class);
             takeScreenShot(System.currentTimeMillis() + "_" +
                     "application list");
-            if(!changeScreen(textViews, views)) break;
+            if(!isScreenChanged(textViews, views)) break;
             textViews.clear();
             textViews.addAll(views);
             if(checkEntradaIcon(views)) return true;
@@ -90,10 +100,12 @@ public class TestCaseHelper {
         return false;
     }
 
-    public boolean changeScreen(ArrayList<View> textViews, ArrayList<View> views) {
+    public boolean isScreenChanged(ArrayList<View> textViews, ArrayList<View> views) {
         if(textViews.size() != views.size()) return true;
         for(int currentIndex = 0; currentIndex < textViews.size(); currentIndex ++) {
-            if(!textViews.get(currentIndex).getText().equals(views.get(currentIndex).getText())) return true;
+//            i(textViews.get(currentIndex).getText() + " | " + views.get(currentIndex).getText());
+//            i("equals? " + (textViews.get(currentIndex).getText().equals(views.get(currentIndex).getText())));
+            if(!(textViews.get(currentIndex).getText().equals(views.get(currentIndex).getText()))) return true;
         }
         return false;
     }
@@ -107,16 +119,16 @@ public class TestCaseHelper {
     }
 
     public void takeScreenShot(String name) {
-        testHelper.takeScreenshot(name, screenShotFolder);
+        testHelper.takeScreenshot(name.replaceAll(" ", "_"), screenShotFolder);
     }
 
-    public void enableInstallationFromUnknownSources() {
+    public boolean enableInstallationFromUnknownSources() {
         View settingsButton = testHelper.getViewByText("Settings", false);
         settingsButton.click();
         if(!testHelper.waitForExistsByText("Security", 10000, true)) {
             takeScreenShot("text_Security_is_not_found");
             i("text Security is not found");
-            System.exit(0);
+            return false;
         }
         View unknownSources = findUnKnownSources();
         if(unknownSources != null && unknownSources.exists()) {
@@ -124,16 +136,17 @@ public class TestCaseHelper {
             unknownSources.click();
             if(!testHelper.waitForExistsByText("cancel", 10000, false)) {
                 takeScreenShot("unknown_sources_dialog");
-                System.exit(0);
+                return false;
             }
             View ok = testHelper.getViewByText("OK", false, false);
             if(!ok.exists()) {
                 takeScreenShot("unknown_sources_dialog");
-                System.exit(0);
+                return false;
             }
             ok.click();
             testHelper.pressBack();
         }
+        return true;
     }
 
     private View findUnKnownSources() {
@@ -148,7 +161,7 @@ public class TestCaseHelper {
         while(true) {
             testHelper.swipe(width/2, height/2 + height/5, width/2, height/2 - height/5);
             newTextViews = testHelper.getCurrentViews(android.widget.TextView.class);
-            if(!changeScreen(newTextViews, textViews)) break;
+            if(!isScreenChanged(newTextViews, textViews)) break;
             textViews.clear();
             textViews.addAll(newTextViews);
             unknownSources = testHelper.getViewByText("Unknown sources");
@@ -161,7 +174,7 @@ public class TestCaseHelper {
         while(true) {
             testHelper.swipe(width/2, height/2 - height/5, width/2, height/2 + height/5);
             newTextViews = testHelper.getCurrentViews(android.widget.TextView.class);
-            if(!changeScreen(newTextViews, textViews)) break;
+            if(!isScreenChanged(newTextViews, textViews)) break;
             textViews.clear();
             textViews.addAll(newTextViews);
             unknownSources = testHelper.getViewByText("Unknown sources");
@@ -171,14 +184,49 @@ public class TestCaseHelper {
         return null;
     }
 
-    public void waitTextAndClick(String text, boolean isFullMatch) {
+    public boolean waitForTextAndClick(String text, boolean isFullMatch) {
         if(!testHelper.waitForExistsByText(text, 10000, isFullMatch)) {
             i(text + " does not exist");
             takeScreenShot(text + "_is_not_found");
-            System.exit(0);
+            return false;
         }
         View next = testHelper.getViewByText(text, isFullMatch, false);
         i("click on text: " + text);
         next.click();
+        return true;
+    }
+
+    public boolean openInstallationScreen() {
+        if(Runner.isInstalledApk(Constant.PACKAGE_APP, testHelper.getDeviceID())) {
+            testHelper.getAdb().unInstall(Constant.PACKAGE_APP);
+//            Runner.runProcess(new String[]{"adb", "-s", device.getId(), "uninstall", Constant.PACKAGE_APP}, true);
+        }
+        testHelper.getAdb().push("entrada-5.3.32-aligned.apk", "/sdcard/");
+        testHelper.getSettingsHelper().openInstallationWindow("/sdcard/entrada-5.3.32-aligned.apk");
+        if(testHelper.waitForExistsByText("Settings", 3000, false)) {
+            enableInstallationFromUnknownSources();
+            return false;
+        }
+        return true;
+    }
+
+    public boolean openAppsScreen() {
+        if(!testHelper.waitForExistsByDescriptor("Apps", 5000)) {
+            testHelper.pressHome();
+        } else {
+            View appsButton = testHelper.getViewByDescriptor("Apps", false);
+            i("click on Apps button");
+            appsButton.click();
+            return true;
+        }
+        if(!testHelper.waitForExistsByDescriptor("Apps", 10000)) {
+            i("Apps button is not found");
+            return false;
+        }
+
+        View appsButton = testHelper.getViewByDescriptor("Apps", false);
+        i("click on Apps button");
+        appsButton.click();
+        return true;
     }
 }
