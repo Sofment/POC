@@ -9,6 +9,7 @@ import com.company.report.Report;
 import com.company.test.testcase.Description;
 import com.company.test.testcase.ExpectedResult;
 import com.company.test.testcase.TestCaseHelper;
+import com.company.utils.Constant;
 import net.bugs.imap.GMailSender;
 import net.bugs.testhelper.TestHelper;
 import net.bugs.testhelper.view.View;
@@ -46,30 +47,33 @@ public class Test {
             this.tc122();
         } else if(testName.equalsIgnoreCase(TestNamesEnum.TC266.name())) {
             this.tc266();
+        }  else if(testName.equalsIgnoreCase(TestNamesEnum.TC267.name())) {
+            this.tc267();
         } else if(testName.equalsIgnoreCase(TestNamesEnum.ALL.name())) {
             tc265();
             tc122();
             tc266();
+            tc267();
         }
 
         GMailSender gMailSender = testHelper.getGMailSender("recorderofcalls@gmail.com", "!Softtec08002");
         Report report = new Report(testCases);
         String body = report.getHtmlReport();
         gMailSender.setBody(body);
-        gMailSender.setTo("m.sushkevich@agilefusion.com", "peter.ruchkin@kandasoft.com", "n.ivanov@agilefusion.com");
+        gMailSender.setTo("m.sushkevich@agilefusion.com", "n.ivanov@agilefusion.com");//, "peter.ruchkin@kandasoft.com");
         gMailSender.setSubject("Entrada - POC (Proof Of Concept)");
         File file = new File(testManager.getConfigManager().getProperty("PATH_TOP_SCREEN_SHOT_FOLDER"));
-        if(file.exists()) {
-            if(file.listFiles() != null){
-                for (File childFile : file.listFiles()) {
-                    try {
-                        gMailSender.addAttachment(childFile.getAbsolutePath());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
+//        if(file.exists()) {
+//            if(file.listFiles() != null){
+//                for (File childFile : file.listFiles()) {
+//                    try {
+//                        gMailSender.addAttachment(childFile.getAbsolutePath());
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
+//        }
         try {
             gMailSender.send();
         } catch (Exception e) {
@@ -77,11 +81,89 @@ public class Test {
         }
     }
 
+    private void tc267() {
+
+        i(Description.TC267);
+        testCase = new TestCase("TC267", "android-entrada_Install_Create PIN", 1);
+
+        if(!testCaseHelper.reinstallEntradaViaAdb()) {
+            return;
+        }
+        testCaseHelper.startEntrada();
+        View editText = null;
+        if(testHelper.waitForExistsByClass(android.widget.EditText.class.getName(), 20000, false)) {
+            editText = testHelper.getViewByClass(android.widget.EditText.class.getName(), false, false);
+            if(editText.getPackageName().equals(Constant.PACKAGE_APP)) {
+                i("Choose pin window is displayed");
+                testCase.addExpectedResult(new ExpectedResult("Choose PIN window is displayed", true));
+            } else {
+                i("Choose pin window is not displayed");
+                testCase.addExpectedResult(new ExpectedResult("Choose PIN window is not displayed", false));
+                return;
+            }
+        } else {
+            i("Choose pin window is not displayed");
+            testCase.addExpectedResult(new ExpectedResult("Choose PIN window is displayed", false));
+            return;
+        }
+
+        editText.click();
+
+        testHelper.inputText(testCaseHelper.pin);
+        editText = testHelper.getViewByClass(android.widget.EditText.class.getName());
+        View arrow = testHelper.getNextView(editText);
+
+        if(arrow.exists()) {
+            i("click on arrow");
+            arrow.click();
+        } else {
+            i("arrow is not found");
+            return;
+        }
+        editText = testHelper.getViewByClass(android.widget.EditText.class.getName());
+        i("Tap into Confirm PIN");
+        editText.click();
+        testHelper.inputText(testCaseHelper.pin);
+
+        editText = testHelper.getViewByClass(android.widget.EditText.class.getName());
+        arrow = testHelper.getNextView(editText);
+        i("Confirm PIN window is displayed");
+        testCase.addExpectedResult(new ExpectedResult("Confirm PIN window is displayed", true));
+
+        if(arrow.exists()) {
+            i("click on arrow");
+            arrow.click();
+        } else {
+            i("arrow is not found");
+            return;
+        }
+
+        if(testHelper.waitForExistsByText("Do you have a clinic code?", 20000, false)) {
+            i("Screen enter clinic code is displayed");
+            testCase.addExpectedResult(new ExpectedResult("Pin is created. New user created successfully message will display. Enter PIN window is displayed.", true));
+        } else  {
+            i("Screen enter clinic code is not displayed");
+            testCase.addExpectedResult(new ExpectedResult("Pin is created. New user created successfully message will display. Enter PIN window is displayed.", false));
+        }
+
+        i("press home button");
+        testHelper.pressHome();
+
+        if(testHelper.waitUntilGoneByText("Do you have a clinic code?", 20000, false)) {
+            i("Entrada app is closed");
+            testCase.addExpectedResult(new ExpectedResult("Entrada app is closed. PIN has been created.", true));
+        } else  {
+            i("Entrada app is not closed");
+            testCase.addExpectedResult(new ExpectedResult("Entrada app is closed. PIN has been created.", false));
+        }
+
+        testCases.add(testCase);
+    }
+
     public void tc265() {
         i(Description.TC265);
 
         testCase = new TestCase("TC265", "android-entrada_Un-Install_OK", 1);
-
         testCaseHelper.openAppsScreen();
 
 
@@ -89,7 +171,7 @@ public class Test {
         if(!testCaseHelper.findEntradaApplication(views)) {
             i("Entrada application is not installed.\n" +
                     "installing...");
-            testHelper.getAdb().install("entrada-5.3.32-aligned.apk");
+            testCaseHelper.installEntradaViaAbd();
             i("restart test case tc265");
             if(isFirstLaunch) {
                 isFirstLaunch = false;

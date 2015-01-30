@@ -4,7 +4,8 @@ package com.company.test.testcase;
  * Created by avsupport on 1/29/15.
  */
 public class Description {
-    public static final String TC265 = "\n##############################################################################\n" +
+    public static final String TC265 = "\n" +
+            "##############################################################################\n" +
             "\tTC265 - android-entrada_Un-Install_OK\n" +
             "##############################################################################\n" +
             "\n" +
@@ -26,7 +27,8 @@ public class Description {
             "    B. Application will display un-installing while it is removing the application and all data. Once deleted, Entrada icon is removed from the applications list.\n" +
             "##############################################################################\n";
 
-        public static final String TC122 = "\n##############################################################################\n" +
+        public static final String TC122 = "\n" +
+                "##############################################################################\n" +
                 "TC122 - android_entrada_Install_Install\n" +
                 "##############################################################################\n" +
                 "\n" +
@@ -48,7 +50,8 @@ public class Description {
                 "B. Install is complete. Icon will be placed on the device home screen."
                 + "\n##############################################################################\n";
 
-        public static final String TC266 = "\n##############################################################################\n" +
+        public static final String TC266 = "\n" +
+                "##############################################################################\n" +
                 "TC266 - android-entrada_Install_Cancel\n" +
                 "##############################################################################\n" +
                 "\n" +
@@ -73,4 +76,33 @@ public class Description {
                 "C. Install will be cancelled. .apk file will be displayed"
                 + "\n##############################################################################\n";
 
+        public static final String TC267 = "\n" +
+                "##############################################################################\n" +
+                "TC267 - android-entrada_Install_Create PIN\n" +
+                "##############################################################################\n" +
+                "\n" +
+                "The following test will create a PIN code to use when you login to the application. Test assumes Entrada is already installed on the device and there are no PINS created.\n" +
+                "\n" +
+                "Test steps\n" +
+                "\n" +
+                "1. Tap Entrada icon \n" +
+                "Result A \n" +
+                "2. Tap into Choose PIN \n" +
+                "3. Enter valid PIN \n" +
+                "4. Tap arrow \n" +
+                "Result B \n" +
+                "5. Tap into Confirm PIN \n" +
+                "6. Enter same valid PIN as in #3 \n" +
+                "4. Tap arrow \n" +
+                "Result C \n" +
+                "5. Tap Device home button \n" +
+                "Result D\n" +
+                "\n" +
+                "Expected result\n" +
+                "\n" +
+                "A. Choose PIN window is displayed \n" +
+                "B. Confirm PIN window is displayed \n" +
+                "C. Pin is created. New user created successfully message will display. Enter PIN window is displayed. \n" +
+                "D. Entrada app is closed. PIN has been created"
+                + "\n##############################################################################\n";
 }

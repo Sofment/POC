@@ -1,5 +1,6 @@
 package com.company.test.testcase;
 
+import com.company.enums.ConfigParameter;
 import com.company.model.TestCase;
 import com.company.utils.Constant;
 import com.company.utils.Runner;
@@ -17,10 +18,12 @@ public class TestCaseHelper {
 
     private TestHelper testHelper;
     private String screenShotFolder = "screenshots";
+    public String pin = "0000";
 
     public TestCaseHelper(TestHelper testHelper) {
         this.testHelper = testHelper;
-        this.screenShotFolder = testHelper.propertiesManager.getProperty("PATH_TOP_SCREEN_SHOT_FOLDER");
+        this.screenShotFolder = testHelper.propertiesManager.getProperty(ConfigParameter.PATH_TOP_SCREEN_SHOT_FOLDER.name());
+        this.pin = testHelper.propertiesManager.getProperty(ConfigParameter.PIN.name());
     }
 
     public boolean uninstallEntrada(TestCase testCase) {
@@ -198,7 +201,7 @@ public class TestCaseHelper {
 
     public boolean openInstallationScreen() {
         if(Runner.isInstalledApk(Constant.PACKAGE_APP, testHelper.getDeviceID())) {
-            testHelper.getAdb().unInstall(Constant.PACKAGE_APP);
+            testHelper.getAdb().uninstall(Constant.PACKAGE_APP);
 //            Runner.runProcess(new String[]{"adb", "-s", device.getId(), "uninstall", Constant.PACKAGE_APP}, true);
         }
         testHelper.getAdb().push("entrada-5.3.32-aligned.apk", "/sdcard/");
@@ -228,5 +231,47 @@ public class TestCaseHelper {
         i("click on Apps button");
         appsButton.click();
         return true;
+    }
+
+    public void installEntradaViaAbd() {
+        testHelper.getAdb().install("entrada-5.3.32-aligned.apk");
+    }
+
+    public void uninstallEntradaViaAbd() {
+        testHelper.getAdb().uninstall(Constant.PACKAGE_APP);
+    }
+
+    public boolean isEntradaInstalled() {
+        ArrayList<String> packages = testHelper.getAdb().getShell().getPackagesOfInstalledApplications();
+
+        return packages.contains(Constant.PACKAGE_APP);
+    }
+
+    public boolean reinstallEntradaViaAdb() {
+        if(isEntradaInstalled()) {
+            i("uninstalling Entrada application");
+            uninstallEntradaViaAbd();
+            if(!isEntradaInstalled()) {
+                i("Entrada application has been uninstalled");
+            } else {
+                i("Entrada application still not uninstalled");
+                return false;
+            }
+        }
+
+        i("installing Entrada application");
+        installEntradaViaAbd();
+        if(isEntradaInstalled()) {
+            i("Entrada application has been installed");
+        } else {
+            i("Entrada application still not installed");
+            return false;
+        }
+        return true;
+    }
+
+    public void startEntrada() {
+        i("Start Entrada application");
+        testHelper.getAdb().getShell().startIntent(Constant.ENTRADA_MAiN_ACTIVITY);
     }
 }

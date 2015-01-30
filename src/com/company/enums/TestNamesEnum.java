@@ -5,8 +5,8 @@ package com.company.enums;
  */
 public enum  TestNamesEnum {
     TC265,
-    TC266, TC122,
-    ALL
+    TC266, TC122, TC267,
+    ALL,
 }
 
 

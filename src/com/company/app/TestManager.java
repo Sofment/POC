@@ -2,6 +2,7 @@ package com.company.app;
 
 import com.company.model.Device;
 import com.company.utils.CommandLine;
+import com.company.utils.Constant;
 import net.bugs.testhelper.TestHelper;
 
 /**
@@ -18,7 +19,7 @@ public class TestManager {
     private TestManager(String[] args) {
         commandLine = new CommandLine(args);
         device = new Device(commandLine.getDeviceId());
-        testHelper = new TestHelper("config.properties", commandLine.getDeviceId());
+        testHelper = new TestHelper(Constant.CONFIGURATION_FILE_PATH, commandLine.getDeviceId());
         configManager = new ConfigManager();
     }
 
