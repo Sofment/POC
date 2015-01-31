@@ -64,7 +64,7 @@ public class TestCase {
         boolean result;
         formatRaw = (result = getExpectedResultStatus()) ? HtmlPattern.HTMLSinglePassedCellPattern : HtmlPattern.HTMLSingleFailedCellPattern;
 
-        stringBuilder.append(String.format(formatRaw, result));
+        stringBuilder.append(String.format(formatRaw, (result ? "pass" : "fail")));
 
         String line = String.format(HtmlPattern.HTMLSingleRawPattern, stringBuilder.toString());
 
@@ -75,7 +75,7 @@ public class TestCase {
             stringBuilder.append(String.format(HtmlPattern.HTMLStyleSingleCellPattern, " colspan=\"2\"", expectedResults.get(currentIndex).getDescription()));
             formatRaw = (result = expectedResults.get(currentIndex).getResult()) ? HtmlPattern.HTMLSinglePassedCellPattern : HtmlPattern.HTMLSingleFailedCellPattern;
 
-            stringBuilder.append(String.format(formatRaw, result));
+            stringBuilder.append(String.format(formatRaw, result ? "pass" : "fail"));
             line = line + String.format(HtmlPattern.HTMLSingleRawPattern, stringBuilder.toString());
         }
         return  line;

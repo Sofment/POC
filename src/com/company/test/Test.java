@@ -13,8 +13,6 @@ import com.company.utils.Constant;
 import net.bugs.imap.GMailSender;
 import net.bugs.testhelper.TestHelper;
 import net.bugs.testhelper.view.View;
-
-import java.io.File;
 import java.util.ArrayList;
 
 import static net.bugs.testhelper.helpers.LoggerUtil.i;
@@ -56,13 +54,13 @@ public class Test {
             tc267();
         }
 
-        GMailSender gMailSender = testHelper.getGMailSender("recorderofcalls@gmail.com", "!Softtec08002");
+        GMailSender gMailSender = testHelper.getGMailSender("testsreporter@gmail.com", "_Test_Helper_001");
         Report report = new Report(testCases);
         String body = report.getHtmlReport();
         gMailSender.setBody(body);
-        gMailSender.setTo("m.sushkevich@agilefusion.com", "n.ivanov@agilefusion.com");//, "peter.ruchkin@kandasoft.com");
+        gMailSender.setTo("m.sushkevich@agilefusion.com", "n.ivanov@agilefusion.com");//, "p.ruchkin@softteco.com", "serge@softteco.com");
         gMailSender.setSubject("Entrada - POC (Proof Of Concept)");
-        File file = new File(testManager.getConfigManager().getProperty("PATH_TOP_SCREEN_SHOT_FOLDER"));
+//        File file = new File(testManager.getConfigManager().getProperty("PATH_TOP_SCREEN_SHOT_FOLDER"));
 //        if(file.exists()) {
 //            if(file.listFiles() != null){
 //                for (File childFile : file.listFiles()) {
