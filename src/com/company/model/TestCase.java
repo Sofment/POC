@@ -11,15 +11,13 @@ import java.util.List;
  */
 public class TestCase {
     private String name;
-    private int status;
     private List<String> steps = new ArrayList<String>();
     private ArrayList<ExpectedResult> expectedResults = new ArrayList<ExpectedResult>(){};
     private String id;
 
-    public TestCase(String id, String name, int status) {
+    public TestCase(String id, String name) {
         this.id = id;
         this.name = name;
-        this.status = status;
     }
 
     public String getName() {
@@ -28,14 +26,6 @@ public class TestCase {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
     }
 
     public List<String> getSteps() {
@@ -100,7 +90,6 @@ public class TestCase {
         return "{\"TestCase\":{" +
                 "\"id\":\"" + id + "\"" +
                 "\"name\":\"" + name + "\"" +
-                ", \"status\":" + status +
                 "," + result + "}}";
     }
 }

@@ -71,9 +71,8 @@ public class Test {
     }
 
     private void tc267() {
-
         i(Description.TC267);
-        testCase = new TestCase("TC267", "android-entrada_Install_Create PIN", 1);
+        testCase = new TestCase("TC267", "android-entrada_Install_Create PIN");
 
         if(!testCaseHelper.reinstallEntradaViaAdb()) {
             return;
@@ -152,9 +151,8 @@ public class Test {
     public void tc265() {
         i(Description.TC265);
 
-        testCase = new TestCase("TC265", "android-entrada_Un-Install_OK", 1);
+        testCase = new TestCase("TC265", "android-entrada_Un-Install_OK");
         testCaseHelper.openAppsScreen();
-
 
         ArrayList<View> views = testHelper.getCurrentViews(android.widget.TextView.class);
         if(!testCaseHelper.findEntradaApplication(views)) {
@@ -180,7 +178,7 @@ public class Test {
 
     public void tc122() {
         i(Description.TC122);
-        testCase = new TestCase("TC122", "android_entrada_Install_Install", 1);
+        testCase = new TestCase("TC122", "android_entrada_Install_Install");
 
         if(!openInstallationScreen(TestNamesEnum.TC122)){
 //            testCases.add(testCase);
@@ -230,7 +228,7 @@ public class Test {
 
     public void tc266() {
         i(Description.TC266);
-        testCase = new TestCase("TC266", "android-entrada_Install_Cancel", 1);
+        testCase = new TestCase("TC266", "android-entrada_Install_Cancel");
 
         testHelper.pressHome();
 

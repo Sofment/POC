@@ -8,6 +8,7 @@ import net.bugs.testhelper.TestHelper;
 import net.bugs.testhelper.view.View;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static net.bugs.testhelper.helpers.LoggerUtil.i;
 
@@ -217,7 +218,8 @@ public class TestCaseHelper {
         if(!testHelper.waitForExistsByDescriptor("Apps", 5000)) {
             testHelper.pressHome();
         } else {
-            View appsButton = testHelper.getViewByDescriptor("Apps", false);
+            List<View> list = testHelper.getCurrentViewsByDescriptor("Apps", false);
+            View appsButton = list.get(list.size()-1);
             i("click on Apps button");
             appsButton.click();
             return true;
@@ -227,7 +229,8 @@ public class TestCaseHelper {
             return false;
         }
 
-        View appsButton = testHelper.getViewByDescriptor("Apps", false);
+        List<View> list = testHelper.getCurrentViewsByDescriptor("Apps", false);
+        View appsButton = list.get(list.size()-1);
         i("click on Apps button");
         appsButton.click();
         return true;

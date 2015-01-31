@@ -11,15 +11,15 @@ import java.io.File;
  */
 public class EmailNotification {
     private TestHelper testHelper;
-    private EmailUser defaultEmailUser;
+    private EmailUser emailUser;
     private GMailSender gMailSender;
 
     public EmailNotification(TestHelper testHelper, EmailUser emailUser) {
         this.testHelper = testHelper;
         if(emailUser == null) {
-            defaultEmailUser = new EmailUser("testsreporter@gmail.com", "_Test_Helper_001");
+            this.emailUser = new EmailUser("testsreporter@gmail.com", "_Test_Helper_001");
         }
-        gMailSender = testHelper.getGMailSender(emailUser.getEmail(), emailUser.getPassword());
+        gMailSender = testHelper.getGMailSender(this.emailUser.getEmail(), this.emailUser.getPassword());
     }
 
     public void addFileToAttachment(File file){
