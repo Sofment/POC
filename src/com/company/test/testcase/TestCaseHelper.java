@@ -255,7 +255,6 @@ public class TestCaseHelper {
 
     public boolean isEntradaInstalled() {
         ArrayList<String> packages = testHelper.getAdb().getShell().getPackagesOfInstalledApplications();
-        i("Packages:"+packages.toString());
         return packages.contains(Constant.PACKAGE_APP);
     }
 
