@@ -21,6 +21,7 @@
 
 package com.company.app;
 
+import com.company.enums.ConfigParameter;
 import com.company.utils.Constant;
 
 import java.io.File;
@@ -44,18 +45,23 @@ public class ConfigManager {
         }
     }
 
+    public String[] getSentToEmails() {
+        String value = getProperty(ConfigParameter.SEND_TO.name());
+        if(value == null) {
+            return new String[]{""}; // todo default email
+        }
+        return value.split(",");
+    }
+
     public String getProperty(String propertyKey) {
         Enumeration enuKeys = properties.keys();
         while (enuKeys.hasMoreElements()) {
             String key = (String) enuKeys.nextElement();
-
-            if(!key.equalsIgnoreCase(propertyKey)) continue;
-
+            if(!key.equalsIgnoreCase(propertyKey))
+                continue;
             String value = properties.getProperty(key);
-
             return value;
         }
-
         return null;
     }
 

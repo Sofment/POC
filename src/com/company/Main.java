@@ -1,26 +1,21 @@
 package com.company;
 
 import com.company.app.TestManager;
-import com.company.enums.ConfigParameter;
 import com.company.test.Test;
-
-import java.io.File;
+import com.company.utils.CommandLine;
 
 public class Main {
 
     public static void main(String[] args) throws Exception {
-        TestManager testManager = TestManager.getInstance(args);
-
-        File file = new File(testManager.getConfigManager().getProperty(ConfigParameter.PATH_TOP_SCREEN_SHOT_FOLDER.name()));
-        if(file.exists()) {
-            if(file.listFiles() != null) {
-                for (File childFile : file.listFiles()) {
-                    if (childFile.exists()) childFile.delete();
-                }
-            }
-            file.delete();
+        CommandLine commandLine = new CommandLine(args);
+        if(!commandLine.isSuccessfulParameters()){
+            return;
         }
+
+        TestManager testManager = TestManager.getInstance(commandLine);
+        testManager.clearFolderWithResults();
+
         Test test = new Test();
-        test.startTest(testManager.getCommandLine().getTestName());
+        test.startTest(commandLine.getTestName());
     }
 }

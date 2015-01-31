@@ -2,18 +2,21 @@ package com.company.test;
 
 import com.company.app.ConfigManager;
 import com.company.app.TestManager;
+import com.company.enums.ConfigParameter;
 import com.company.enums.TestNamesEnum;
 import com.company.model.Device;
 import com.company.model.TestCase;
+import com.company.report.EmailNotification;
 import com.company.report.Report;
 import com.company.test.testcase.Description;
 import com.company.test.testcase.ExpectedResult;
 import com.company.test.testcase.TestCaseHelper;
 import com.company.utils.Constant;
-import net.bugs.imap.GMailSender;
 import net.bugs.testhelper.TestHelper;
 import net.bugs.testhelper.view.View;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static net.bugs.testhelper.helpers.LoggerUtil.i;
 
@@ -39,6 +42,7 @@ public class Test {
     }
 
     public void startTest(String testName) {
+        if(testName == null) return;
         if(testName.equalsIgnoreCase(TestNamesEnum.TC265.name())) {
             this.tc265();
         } else if(testName.equalsIgnoreCase(TestNamesEnum.TC122.name())) {
@@ -54,28 +58,15 @@ public class Test {
             tc267();
         }
 
-        GMailSender gMailSender = testHelper.getGMailSender("testsreporter@gmail.com", "_Test_Helper_001");
+        EmailNotification emailNotification = new EmailNotification(testHelper, null);
+        String subject = configManager.getProperty(ConfigParameter.SUBJECT.name());
         Report report = new Report(testCases);
         String body = report.getHtmlReport();
-        gMailSender.setBody(body);
-        gMailSender.setTo("m.sushkevich@agilefusion.com", "n.ivanov@agilefusion.com");//, "p.ruchkin@softteco.com", "serge@softteco.com");
-        gMailSender.setSubject("Entrada - POC (Proof Of Concept)");
-//        File file = new File(testManager.getConfigManager().getProperty("PATH_TOP_SCREEN_SHOT_FOLDER"));
-//        if(file.exists()) {
-//            if(file.listFiles() != null){
-//                for (File childFile : file.listFiles()) {
-//                    try {
-//                        gMailSender.addAttachment(childFile.getAbsolutePath());
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            }
-//        }
-        try {
-            gMailSender.send();
-        } catch (Exception e) {
-            e.printStackTrace();
+        String[] recipients = configManager.getSentToEmails();
+        if(emailNotification.sendEmail(subject, body, recipients)){
+            i("Email was sent to " + Arrays.toString(recipients));
+        }else {
+            i("Email wasn't sent to " + Arrays.toString(recipients));
         }
     }
 

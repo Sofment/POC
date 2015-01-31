@@ -1,38 +1,57 @@
 package com.company.app;
 
+import com.company.enums.ConfigParameter;
 import com.company.model.Device;
 import com.company.utils.CommandLine;
 import com.company.utils.Constant;
 import net.bugs.testhelper.TestHelper;
+
+import java.io.File;
+import static com.company.utils.LoggerUtils.i;
 
 /**
  * Created by nikolai on 10.01.14.
  */
 public class TestManager {
     private static volatile TestManager instance;
-    private static String[] arguments = null;
     private TestHelper testHelper;
     private ConfigManager configManager;
-    private CommandLine commandLine;
+    private static CommandLine commandLine;
     private Device device;
 
-    private TestManager(String[] args) {
-        commandLine = new CommandLine(args);
+    private TestManager(CommandLine cmdLine) {
+        commandLine = cmdLine;
         device = new Device(commandLine.getDeviceId());
         testHelper = new TestHelper(Constant.CONFIGURATION_FILE_PATH, commandLine.getDeviceId());
         configManager = new ConfigManager();
     }
 
-    public static TestManager getInstance() {
-        return getInstance(arguments);
+    public void clearFolderWithResults() {
+        i("----Removal of previous results----");
+        File file = new File(configManager.getProperty(ConfigParameter.PATH_TOP_SCREEN_SHOT_FOLDER.name()));
+        if(file.exists()) {
+            if(file.listFiles() != null) {
+                for (File childFile : file.listFiles()) {
+                    if (childFile.exists()) {
+                        i("File " + childFile.getName() + " was deleted");
+                        childFile.delete();
+                    }
+                }
+            }
+            file.delete();
+        }
     }
 
-    public static TestManager getInstance(String[] args) {
-        arguments = args;
+    public static TestManager getInstance() {
+        return getInstance(commandLine);
+    }
+
+    public static TestManager getInstance(CommandLine cmdLine) {
+        commandLine = cmdLine;
         if(instance == null)
             synchronized (TestManager.class){
                 if(instance == null)
-                    instance = new TestManager(arguments);
+                    instance = new TestManager(commandLine);
             }
         return instance;
     }

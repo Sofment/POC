@@ -6,5 +6,7 @@ package com.company.enums;
 public enum ConfigParameter {
     PATH_TO_APK,
     PATH_TOP_SCREEN_SHOT_FOLDER,
-    PIN
+    PIN,
+    SEND_TO,
+    SUBJECT
 }

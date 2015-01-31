@@ -1,6 +1,10 @@
 package com.company.utils;
 
+import com.company.model.Pair;
+
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static com.company.utils.LoggerUtils.i;
 
@@ -8,52 +12,65 @@ import static com.company.utils.LoggerUtils.i;
  * Created by nikolai on 13.12.2014.
  */
 public class CommandLine {
+    private enum State{HELP, COMMAND};
+    private State state = State.COMMAND;
     private String[] args;
     private String deviceId;
-    private String[] parameters;
     private String testName;
+    private List<Pair> listParameters = new ArrayList<Pair>();
 
-    public static String message = "----------------------------------------------------------------------\n" +
-            "AutomationTestRail.jar parameters:\n" +
-            "(optional)\t -e uninstallApp       \t value = true or false; default value = false;" + "\n" +
-            "(optional)\t -e uninstallApk       \t value = true or false; default value = false;" + "\n" +
-            "(optional)\t -e reinstallApp       \t value = true or false; default value = false;" + "\n" +
-            "(optional)\t -e reinstallTestApk   \t value = true or false; default value = false;" + "\n" +
-            "(optional)\t -e countDevices       \t value = [1, *]; default value = 1;" + "\n" +
-            "(optional)\t -e type               \t value = rail or false; default value = rail;" + "\n" +
-            "(optional)\t -e testCase           \t value = caseId; default value = 0;" + "\n" +
+    public static String help_msg = "\nParameters for Entrada.jar\n" +
+            " -e deviceId       \t - directs command to the device or emulator with the given serial number or qualifier." + "\n" +
+            " -e testName       \t - name of the test that you want to run" + "\n" +
+            "For example: java -jar Entrada.jar " +
+            "-e deviceId 08f6df9a" +
+            "-e testName all" + "\n";
 
-            "For example: java -jar AutomationTestRail.jar " +
-            "-e type rail " +
-            "-e countDevices 1 " +
-            "-e uninstallApp true " +
-            "-e uninstallApk true " +
-            "-e reinstallApp true " +
-            "-e reinstallTestApk true " + "\n" +
-            "----------------------------------------------------------------------";
+    public static String error_msg = "\nUnknown command\n" +"Type 'java -jar Entrada.jar -e help' for usage.";
 
-    /**
-     *
-     * @param args
-     */
     public CommandLine(String[] args) {
         this.args = args;
         if (args != null)
             parseCommandLine();
     }
 
+    public boolean isSuccessfulParameters() {
+        if(getDeviceId() == null || getTestName() == null){
+            i(getState() != State.HELP ? error_msg : "");
+            return false;
+        }
+        return true;
+    }
+
     private void parseCommandLine() {
         String arguments = Arrays.toString(args);
-
-        arguments = validateArgsCount(arguments);
+//        arguments = validateArgsCount(arguments);
         arguments = arguments.replace("[", "");
         arguments = arguments.replace("]", "");
         arguments = arguments.replaceAll(",", "");
+        i("Arguments:" + arguments);
+        if(arguments.contains("-e help")) {
+            i(help_msg);
+            setState(State.HELP);
+            return;
+        }
+        initializePairs(arguments.split("-e"));
+        parseDeviceId();
+        parseTestName();
+    }
 
-        i("Arguments: " + arguments);
-        parameters = arguments.split(" ");
-        setDeviceId(null);
-        this.testName = searchValue(Constant.TEST_NAME);
+    public State getState() {
+        return state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
+    }
+
+    private void initializePairs(String[] lines){
+        for(String part : lines){
+            listParameters.add(new Pair(part.trim().split(" ")));
+        }
     }
 
     private String validateArgsCount(String arguments) {
@@ -77,9 +94,9 @@ public class CommandLine {
     }
 
     private String searchValue(String key) {
-        for (int i = 0; i < parameters.length; i++) {
-            if(parameters[i].equalsIgnoreCase(key))
-                return parameters[i+1];
+        for(Pair pair : listParameters){
+            if(pair.getKey().equalsIgnoreCase(key))
+                return pair.getValue();
         }
         return null;
     }
@@ -92,12 +109,12 @@ public class CommandLine {
         return this.testName;
     }
 
-    public void setDeviceId(String deviceId) {
-        if(deviceId != null) {
-            this.deviceId = deviceId;
-        } else {
-            this.deviceId = searchValue(Constant.DEVICE_ID);
-        }
+    public void parseDeviceId() {
+        this.deviceId = searchValue(Constant.DEVICE_ID);
+    }
+
+    public void parseTestName() {
+        this.testName = searchValue(Constant.TEST_NAME);
     }
 
     public static class Constant {
