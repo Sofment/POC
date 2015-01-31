@@ -7,7 +7,9 @@ import com.company.utils.Runner;
 import net.bugs.testhelper.TestHelper;
 import net.bugs.testhelper.view.View;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static net.bugs.testhelper.helpers.LoggerUtil.i;
@@ -31,8 +33,7 @@ public class TestCaseHelper {
         testHelper.getSettingsHelper().openApplicationDetails("com.entradahealth.entrada.android");
         if(!testHelper.waitForExistsByText("Uninstall", 10000, false)) {
             i("uninstall button is not found");
-            takeScreenShot(System.currentTimeMillis() + "_" +
-                    "uninstall_button_is_not_found_fail");
+            takeScreenShot("uninstall_button_is_not_found_fail");
             return false;
         }
         View uninstallButton = testHelper.getViewByText("Uninstall", false, false);
@@ -43,12 +44,10 @@ public class TestCaseHelper {
                 && testHelper.waitForExistsByText("ok", 1, false)){
             i("Uninstall dialog appeared");
             testCase.addExpectedResult(new ExpectedResult("Do you want to uninstall this app? Cancel and OK buttons are displayed.", true));
-            takeScreenShot(System.currentTimeMillis() + "_" +
-                    "uninstall_dialog_appeared_pass");
+            takeScreenShot("uninstall_dialog_appeared_pass");
         } else {
             i("Uninstall dialog did not appear");
-            takeScreenShot(System.currentTimeMillis() + "_" +
-                    "uninstall_dialog_did_not_appear_fail");
+            takeScreenShot("uninstall_dialog_did_not_appear_fail");
             testCase.addExpectedResult(new ExpectedResult("Do you want to uninstall this app? Cancel and OK buttons are displayed.", false));
 
             return false;
@@ -61,13 +60,11 @@ public class TestCaseHelper {
             testCase.addExpectedResult(new ExpectedResult("Application will display un-installing while it is removing the application and all data. Once deleted, Entrada icon is removed from the applications list", false));
 
             i("Entrada application is not uninstalled");
-            takeScreenShot(System.currentTimeMillis() + "_" +
-                    "entrada_is_not_uninstalled_fail");
+            takeScreenShot("entrada_is_not_uninstalled_fail");
         } else {
             i("Entrada application is uninstalled");
             testCase.addExpectedResult(new ExpectedResult("Application will display un-installing while it is removing the application and all data. Once deleted, Entrada icon is removed from the applications list", true));
-            takeScreenShot(System.currentTimeMillis() + "_" +
-                    "entrada_is_uninstalled_pass");
+            takeScreenShot("entrada_is_uninstalled_pass");
         }
         return true;
     }
@@ -75,8 +72,7 @@ public class TestCaseHelper {
     public boolean findEntradaApplication(ArrayList<View> textViews) {
         if(checkEntradaIcon(textViews)) return true;
 
-        takeScreenShot(System.currentTimeMillis() + "_" +
-                "application list");
+        takeScreenShot("application list");
         int height = testHelper.getScreenHeight();
         int width = testHelper.getScreenWidth();
         ArrayList<View> views;
@@ -84,8 +80,7 @@ public class TestCaseHelper {
         while (true) {
             testHelper.swipe(10, height / 2, width - 10, height / 2);
             views = testHelper.getCurrentViews(android.widget.TextView.class);
-            takeScreenShot(System.currentTimeMillis() + "_" +
-                    "application list");
+            takeScreenShot("application list");
             if(!isScreenChanged(textViews, views)) break;
             textViews.clear();
             textViews.addAll(views);
@@ -94,8 +89,7 @@ public class TestCaseHelper {
         while (true) {
             testHelper.swipe(width - 10, height / 2, 10, height / 2);
             views = testHelper.getCurrentViews(android.widget.TextView.class);
-            takeScreenShot(System.currentTimeMillis() + "_" +
-                    "application list");
+            takeScreenShot("application list");
             if(!isScreenChanged(textViews, views)) break;
             textViews.clear();
             textViews.addAll(views);
@@ -122,7 +116,22 @@ public class TestCaseHelper {
         return false;
     }
 
+    public String getFormatDate(String format) {
+        Date date = new Date(System.currentTimeMillis());
+        SimpleDateFormat simpleDateFormat;
+        String formattingDate = "";
+        if(format == null){
+            simpleDateFormat = new SimpleDateFormat(Constant.DATE_FORMAT);
+            formattingDate = simpleDateFormat.format(date);
+        }else {
+            simpleDateFormat = new SimpleDateFormat(format);
+            formattingDate = simpleDateFormat.format(date);
+        }
+        return formattingDate;
+    }
+
     public void takeScreenShot(String name) {
+        name = getFormatDate(null) + "_" + Constant.Temp.TEST_ID + "_" + name;
         testHelper.takeScreenshot(name.replaceAll(" ", "_"), screenShotFolder);
     }
 
@@ -230,13 +239,13 @@ public class TestCaseHelper {
         }
 
         List<View> list = testHelper.getCurrentViewsByDescriptor("Apps", false);
-        View appsButton = list.get(list.size()-1);
+        View appsButton = list.get(list.size() - 1);
         i("click on Apps button");
         appsButton.click();
         return true;
     }
 
-    public void installEntradaViaAbd() {
+    public void installEntradaViaAdb() {
         testHelper.getAdb().install("entrada-5.3.32-aligned.apk");
     }
 
@@ -246,11 +255,12 @@ public class TestCaseHelper {
 
     public boolean isEntradaInstalled() {
         ArrayList<String> packages = testHelper.getAdb().getShell().getPackagesOfInstalledApplications();
-
+        i("Packages:"+packages.toString());
         return packages.contains(Constant.PACKAGE_APP);
     }
 
     public boolean reinstallEntradaViaAdb() {
+        i("reinstallEntradaViaAdb");
         if(isEntradaInstalled()) {
             i("uninstalling Entrada application");
             uninstallEntradaViaAbd();
@@ -263,7 +273,7 @@ public class TestCaseHelper {
         }
 
         i("installing Entrada application");
-        installEntradaViaAbd();
+        installEntradaViaAdb();
         if(isEntradaInstalled()) {
             i("Entrada application has been installed");
         } else {
