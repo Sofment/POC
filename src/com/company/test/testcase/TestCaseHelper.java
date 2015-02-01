@@ -256,6 +256,7 @@ public class TestCaseHelper {
     public boolean isEntradaInstalled() {
         ArrayList<String> packages = testHelper.getAdb().getShell().getPackagesOfInstalledApplications();
         return packages.contains(Constant.PACKAGE_APP);
+//        return Runner.runProcess(new String[]{"adb", "shell", "pm", "list", "packages"}, Constant.PACKAGE_APP);
     }
 
     public boolean reinstallEntradaViaAdb() {
