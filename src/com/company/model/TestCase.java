@@ -47,8 +47,8 @@ public class TestCase {
     public String getReportRow(int index) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(String.format(HtmlPattern.HTMLStyleSingleCellPattern, "rowspan=\"" + (expectedResults.size() + 1) + "\" align=\"center\"", ++index));
-        stringBuilder.append(String.format(HtmlPattern.HTMLStyleSingleCellPattern, "align=\"center\"", this.id));
-        stringBuilder.append(String.format(HtmlPattern.HTMLSingleCellPattern, this.name));
+        stringBuilder.append(String.format(HtmlPattern.HTMLStyleSingleCellPattern, "bgcolor=\"#dedede\" rowspan=\"" + (expectedResults.size() + 1) + "\" align=\"center\"", this.id));
+        stringBuilder.append(String.format(HtmlPattern.HTMLStyleSingleCellPattern, "bgcolor=\"#dedede\"", this.name));
 
         String formatRaw = "";
         boolean result;
@@ -58,12 +58,12 @@ public class TestCase {
 
         String line = String.format(HtmlPattern.HTMLSingleRawPattern, stringBuilder.toString());
 
-        for (int currentIndex = 0; currentIndex < expectedResults.size(); currentIndex ++) {
+        for (ExpectedResult expectedResult : expectedResults) {
             stringBuilder = new StringBuilder();
 //            if(currentIndex == 0)
 //                stringBuilder.append(String.format(HtmlPattern.HTMLStyleSingleCellPattern, "rowspan=\"" + expectedResults.size() + "\" align=\"center\"", ""));
-            stringBuilder.append(String.format(HtmlPattern.HTMLStyleSingleCellPattern, " colspan=\"2\"", expectedResults.get(currentIndex).getDescription()));
-            formatRaw = (result = expectedResults.get(currentIndex).getResult()) ? HtmlPattern.HTMLSinglePassedCellPattern : HtmlPattern.HTMLSingleFailedCellPattern;
+            stringBuilder.append(String.format(HtmlPattern.HTMLStyleSingleCellPattern, ""/*, " colspan=\"2\""*/, expectedResult.getDescription()));
+            formatRaw = (result = expectedResult.getResult()) ? HtmlPattern.HTMLSinglePassedCellPattern : HtmlPattern.HTMLSingleFailedCellPattern;
 
             stringBuilder.append(String.format(formatRaw, result ? "pass" : "fail"));
             line = line + String.format(HtmlPattern.HTMLSingleRawPattern, stringBuilder.toString());

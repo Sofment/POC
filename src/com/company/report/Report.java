@@ -19,7 +19,7 @@ public class Report {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(String.format(HtmlPattern.HTMLCellHeaderPattern, "Index"));
         stringBuilder.append(String.format(HtmlPattern.HTMLCellHeaderPattern, "ID"));
-        stringBuilder.append(String.format(HtmlPattern.HTMLCellHeaderPattern, "Title"));
+        stringBuilder.append(String.format(HtmlPattern.HTMLCellHeaderPattern, "Title / Expected results"));
         stringBuilder.append(String.format(HtmlPattern.HTMLCellHeaderPattern, "Result"));
 
 

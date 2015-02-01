@@ -210,7 +210,7 @@ public class TestCaseHelper {
     }
 
     public boolean openInstallationScreen() {
-        if(Runner.isInstalledApk(Constant.PACKAGE_APP, testHelper.getDeviceID())) {
+        if(isEntradaInstalled()) {
             i("uninstall application");
             testHelper.getAdb().uninstall(Constant.PACKAGE_APP);
         }
