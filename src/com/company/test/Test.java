@@ -70,8 +70,8 @@ public class Test {
         File zippedScreenshotsFolder = null;
         File screenShotDir = new File(TestManager.ScreenShotFolder);
         if(screenShotDir.exists()) {
-            zipper.zipDirectory(screenShotDir, "screenshots.zip");
-            zippedScreenshotsFolder = new File("screenshots.zip");
+            zipper.zipDirectory(screenShotDir, TestManager.ScreenShotFolder + ".zip");
+            zippedScreenshotsFolder = new File(TestManager.ScreenShotFolder + ".zip");
             if(zippedScreenshotsFolder.exists()) {
                 emailNotification.addFileToAttachment(zippedScreenshotsFolder);
             }
