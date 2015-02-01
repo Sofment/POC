@@ -26,7 +26,7 @@ public class TestManager {
         configManager = new ConfigManager();
     }
 
-    public void clearFolderWithResults() {
+    public void clearPreviousLaunchResults() {
         i("----Removal of previous results----");
         File file = new File(configManager.getProperty(ConfigParameter.PATH_TOP_SCREEN_SHOT_FOLDER.name()));
         if(file.exists()) {
@@ -39,6 +39,11 @@ public class TestManager {
                 }
             }
             file.delete();
+        }
+
+        File zippedScreenshotsFolder = new File("screenshots.zip");
+        if(zippedScreenshotsFolder.exists()) {
+            zippedScreenshotsFolder.delete();
         }
     }
 

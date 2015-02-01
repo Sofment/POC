@@ -67,12 +67,13 @@ public class Test {
         String body = report.getHtmlReport();
         String[] recipients = configManager.getSentToEmails();
 
+        File zippedScreenshotsFolder = null;
         File screenShotDir = new File(TestCaseHelper.ScreenShotFolder);
         if(screenShotDir.exists()) {
             zipper.zipDirectory(screenShotDir, "screenshots.zip");
-            File zipFile = new File("screenshots.zip");
-            if(zipFile.exists()) {
-                emailNotification.addFileToAttachment(zipFile);
+            zippedScreenshotsFolder = new File("screenshots.zip");
+            if(zippedScreenshotsFolder.exists()) {
+                emailNotification.addFileToAttachment(zippedScreenshotsFolder);
             }
         }
 
@@ -80,6 +81,9 @@ public class Test {
             i("Email was sent to " + Arrays.toString(recipients));
         }else {
             i("Email wasn't sent to " + Arrays.toString(recipients));
+        }
+        if(zippedScreenshotsFolder != null && zippedScreenshotsFolder.exists()) {
+            zippedScreenshotsFolder.delete();
         }
     }
 

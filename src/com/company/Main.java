@@ -13,7 +13,7 @@ public class Main {
         }
 
         TestManager testManager = TestManager.getInstance(commandLine);
-        testManager.clearFolderWithResults();
+        testManager.clearPreviousLaunchResults();
 
         Test test = new Test();
         test.startTest(commandLine.getTestName());
