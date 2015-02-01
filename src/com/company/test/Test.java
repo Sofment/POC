@@ -82,9 +82,6 @@ public class Test {
         }else {
             i("Email wasn't sent to " + Arrays.toString(recipients));
         }
-        if(zippedScreenshotsFolder != null && zippedScreenshotsFolder.exists()) {
-            zippedScreenshotsFolder.delete();
-        }
     }
 
     private void tc267() {
