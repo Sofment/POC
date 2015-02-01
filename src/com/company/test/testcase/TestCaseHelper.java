@@ -211,8 +211,8 @@ public class TestCaseHelper {
 
     public boolean openInstallationScreen() {
         if(Runner.isInstalledApk(Constant.PACKAGE_APP, testHelper.getDeviceID())) {
+            i("uninstall application");
             testHelper.getAdb().uninstall(Constant.PACKAGE_APP);
-//            Runner.runProcess(new String[]{"adb", "-s", device.getId(), "uninstall", Constant.PACKAGE_APP}, true);
         }
         testHelper.getAdb().push("entrada-5.3.32-aligned.apk", "/sdcard/");
         testHelper.getSettingsHelper().openInstallationWindow("/sdcard/entrada-5.3.32-aligned.apk");

@@ -11,7 +11,7 @@ import static com.company.utils.LoggerUtils.i;
 public class Runner {
 
     public static boolean isInstalledApk(String pkg, String deviceId) {
-        String[] command = new String[]{"adb", "-s", deviceId, "shell", "pm", "list", "packages", "|", "grep", pkg};
+        String[] command = new String[]{"adb", "-s", deviceId, "shell", "pm", "list", "packages"};
         boolean isInstalled = runProcess(command, pkg);
         if(isInstalled) {
             i("Build with pkg:" + pkg + " is installed on device");
@@ -32,7 +32,7 @@ public class Runner {
             br = new BufferedReader(new InputStreamReader(is));
             String line = null;
             while ((line = br.readLine()) != null) {
-                i(line);
+//                i(line);
                 if(line.contains(waitLine)) {
                     isSuccessProcess = true;
                     break;
