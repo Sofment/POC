@@ -32,7 +32,7 @@ public class TestManager {
 
     public void clearPreviousLaunchResults() {
         i("----Removal of previous results----");
-        File file = new File(ScreenShotFoldergit);
+        File file = new File(ScreenShotFolder);
         if(file.exists()) {
             if(file.listFiles() != null) {
                 for (File childFile : file.listFiles()) {
