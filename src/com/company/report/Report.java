@@ -1,6 +1,7 @@
 package com.company.report;
 
 import com.company.model.TestCase;
+import net.bugs.testhelper.TestHelper;
 
 import java.util.ArrayList;
 
@@ -10,9 +11,11 @@ import java.util.ArrayList;
 public class Report {
 
     ArrayList<TestCase> testCases;
+    TestHelper testHelper;
 
-    public Report(ArrayList<TestCase> testCases) {
+    public Report(ArrayList<TestCase> testCases, TestHelper testHelper) {
         this.testCases = testCases;
+        this.testHelper = testHelper;
     }
 
     private String getHeaderHeader() {
@@ -35,6 +38,11 @@ public class Report {
             content = content + testCases.get(currentIndex).getReportRow(currentIndex);
         }
 
-        return String.format(HtmlPattern.HTMLPattern, content);
+        String header = "<br>Device: " + testHelper.getHwDevice() +
+                ";<br>OS: " + testHelper.getOsDevice() +
+                ";<br>Device id: " + testHelper.getDeviceID() +
+                ";<br>Slave: " + testHelper.getOsFullName() + "<br><br>";
+
+        return String.format(HtmlPattern.HTMLPattern, header, content);
     }
 }

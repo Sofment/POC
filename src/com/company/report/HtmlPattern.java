@@ -6,6 +6,7 @@ package com.company.report;
 public class HtmlPattern {
     public static String HTMLPattern = "<html>" +
             "<body>" +
+            "%s" +
             "<table border=1>%s</table>" +
             "</body>" +
             "</html>";

@@ -2,6 +2,7 @@ package com.company.app;
 
 import com.company.enums.ConfigParameter;
 import com.company.model.Device;
+import com.company.test.Test;
 import com.company.utils.CommandLine;
 import com.company.utils.Constant;
 import net.bugs.testhelper.TestHelper;
@@ -18,17 +19,20 @@ public class TestManager {
     private ConfigManager configManager;
     private static CommandLine commandLine;
     private Device device;
+    public static String ScreenShotFolder = "screenshots";
 
     private TestManager(CommandLine cmdLine) {
         commandLine = cmdLine;
         device = new Device(commandLine.getDeviceId());
         testHelper = new TestHelper(Constant.CONFIGURATION_FILE_PATH, commandLine.getDeviceId());
         configManager = new ConfigManager();
+
+        ScreenShotFolder = testHelper.getDeviceID().replaceAll("\\.", "_").replaceAll(":", "_") + "_screenshots";
     }
 
     public void clearPreviousLaunchResults() {
         i("----Removal of previous results----");
-        File file = new File(configManager.getProperty(ConfigParameter.PATH_TOP_SCREEN_SHOT_FOLDER.name()));
+        File file = new File(ScreenShotFoldergit);
         if(file.exists()) {
             if(file.listFiles() != null) {
                 for (File childFile : file.listFiles()) {

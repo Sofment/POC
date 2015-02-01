@@ -1,7 +1,9 @@
 package com.company.test.testcase;
 
+import com.company.app.TestManager;
 import com.company.enums.ConfigParameter;
 import com.company.model.TestCase;
+import com.company.test.Test;
 import com.company.utils.Constant;
 import net.bugs.testhelper.TestHelper;
 import net.bugs.testhelper.view.View;
@@ -19,12 +21,10 @@ import static net.bugs.testhelper.helpers.LoggerUtil.i;
 public class TestCaseHelper {
 
     private TestHelper testHelper;
-    public static String ScreenShotFolder = "screenshots";
     public String pin = "0000";
 
     public TestCaseHelper(TestHelper testHelper) {
         this.testHelper = testHelper;
-        ScreenShotFolder = testHelper.propertiesManager.getProperty(ConfigParameter.PATH_TOP_SCREEN_SHOT_FOLDER.name());
         this.pin = testHelper.propertiesManager.getProperty(ConfigParameter.PIN.name());
     }
 
@@ -132,7 +132,7 @@ public class TestCaseHelper {
 
     public void takeScreenShot(String name) {
         name = getFormatDate(null) + "_" + Constant.Temp.TEST_ID + "_" + name;
-        testHelper.takeScreenshot(name.replaceAll(" ", "_"), ScreenShotFolder);
+        testHelper.takeScreenshot(name.replaceAll(" ", "_"), TestManager.ScreenShotFolder);
     }
 
     public boolean enableInstallationFromUnknownSources() {

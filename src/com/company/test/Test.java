@@ -63,12 +63,12 @@ public class Test {
         Zipper zipper = testHelper.getZipper();
         EmailNotification emailNotification = new EmailNotification(testHelper, null);
         String subject = configManager.getProperty(ConfigParameter.SUBJECT.name());
-        Report report = new Report(testCases);
+        Report report = new Report(testCases, testHelper);
         String body = report.getHtmlReport();
         String[] recipients = configManager.getSentToEmails();
 
         File zippedScreenshotsFolder = null;
-        File screenShotDir = new File(TestCaseHelper.ScreenShotFolder);
+        File screenShotDir = new File(TestManager.ScreenShotFolder);
         if(screenShotDir.exists()) {
             zipper.zipDirectory(screenShotDir, "screenshots.zip");
             zippedScreenshotsFolder = new File("screenshots.zip");
