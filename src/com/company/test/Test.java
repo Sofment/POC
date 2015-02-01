@@ -13,8 +13,10 @@ import com.company.test.testcase.ExpectedResult;
 import com.company.test.testcase.TestCaseHelper;
 import com.company.utils.Constant;
 import net.bugs.testhelper.TestHelper;
+import net.bugs.testhelper.helpers.Zipper;
 import net.bugs.testhelper.view.View;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -58,11 +60,22 @@ public class Test {
             tc267();
         }
 
+        Zipper zipper = testHelper.getZipper();
         EmailNotification emailNotification = new EmailNotification(testHelper, null);
         String subject = configManager.getProperty(ConfigParameter.SUBJECT.name());
         Report report = new Report(testCases);
         String body = report.getHtmlReport();
         String[] recipients = configManager.getSentToEmails();
+
+        File screenShotDir = new File(TestCaseHelper.ScreenShotFolder);
+        if(screenShotDir.exists()) {
+            zipper.zipDirectory(screenShotDir, "screenshots.zip");
+            File zipFile = new File("screenshots.zip");
+            if(zipFile.exists()) {
+                emailNotification.addFileToAttachment(zipFile);
+            }
+        }
+
         if(emailNotification.sendEmail(subject, body, recipients)){
             i("Email was sent to " + Arrays.toString(recipients));
         }else {
@@ -158,7 +171,7 @@ public class Test {
         testCaseHelper.openAppsScreen();
 
         ArrayList<View> views = testHelper.getCurrentViews(android.widget.TextView.class);
-        if(!testCaseHelper.findEntradaApplication(views)) {
+        if(!testCaseHelper.findEntradaApplication(views, false)) {
             i("Entrada application is not installed.\n" +
                     "installing...");
             testCaseHelper.installEntradaViaAdb();
@@ -219,7 +232,7 @@ public class Test {
         done.click();
 
         testHelper.pressHome();
-        if(testCaseHelper.findEntradaApplication(testHelper.getCurrentViews(android.widget.TextView.class))){
+        if(testCaseHelper.findEntradaApplication(testHelper.getCurrentViews(android.widget.TextView.class), true)){
             i("Entrada application is installed, icon is found on home screen");
             testCase.addExpectedResult(new ExpectedResult("Install is complete. Icon will be placed on the device home screen.", true));
             testCaseHelper.takeScreenShot("entrada_icon_is_found_on_home_screen");

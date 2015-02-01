@@ -3,7 +3,6 @@ package com.company.test.testcase;
 import com.company.enums.ConfigParameter;
 import com.company.model.TestCase;
 import com.company.utils.Constant;
-import com.company.utils.Runner;
 import net.bugs.testhelper.TestHelper;
 import net.bugs.testhelper.view.View;
 
@@ -20,12 +19,12 @@ import static net.bugs.testhelper.helpers.LoggerUtil.i;
 public class TestCaseHelper {
 
     private TestHelper testHelper;
-    private String screenShotFolder = "screenshots";
+    public static String ScreenShotFolder = "screenshots";
     public String pin = "0000";
 
     public TestCaseHelper(TestHelper testHelper) {
         this.testHelper = testHelper;
-        this.screenShotFolder = testHelper.propertiesManager.getProperty(ConfigParameter.PATH_TOP_SCREEN_SHOT_FOLDER.name());
+        ScreenShotFolder = testHelper.propertiesManager.getProperty(ConfigParameter.PATH_TOP_SCREEN_SHOT_FOLDER.name());
         this.pin = testHelper.propertiesManager.getProperty(ConfigParameter.PIN.name());
     }
 
@@ -56,7 +55,7 @@ public class TestCaseHelper {
         okButton.click();
         testHelper.sleep(5000);
         ArrayList<View> views = testHelper.getCurrentViews(android.widget.TextView.class);
-        if(findEntradaApplication(views)) {
+        if(findEntradaApplication(views, false)) {
             testCase.addExpectedResult(new ExpectedResult("Application will display un-installing while it is removing the application and all data. Once deleted, Entrada icon is removed from the applications list", false));
 
             i("Entrada application is not uninstalled");
@@ -69,10 +68,11 @@ public class TestCaseHelper {
         return true;
     }
 
-    public boolean findEntradaApplication(ArrayList<View> textViews) {
+    public boolean findEntradaApplication(ArrayList<View> textViews, boolean isHomeScreen) {
         if(checkEntradaIcon(textViews)) return true;
 
-        takeScreenShot("application list");
+        String name = isHomeScreen ? "home screen" : "application list";
+        takeScreenShot(name);
         int height = testHelper.getScreenHeight();
         int width = testHelper.getScreenWidth();
         ArrayList<View> views;
@@ -80,8 +80,8 @@ public class TestCaseHelper {
         while (true) {
             testHelper.swipe(10, height / 2, width - 10, height / 2);
             views = testHelper.getCurrentViews(android.widget.TextView.class);
-            takeScreenShot("application list");
             if(!isScreenChanged(textViews, views)) break;
+            takeScreenShot(name);
             textViews.clear();
             textViews.addAll(views);
             if(checkEntradaIcon(views)) return true;
@@ -89,8 +89,8 @@ public class TestCaseHelper {
         while (true) {
             testHelper.swipe(width - 10, height / 2, 10, height / 2);
             views = testHelper.getCurrentViews(android.widget.TextView.class);
-            takeScreenShot("application list");
             if(!isScreenChanged(textViews, views)) break;
+            takeScreenShot(name);
             textViews.clear();
             textViews.addAll(views);
             if(checkEntradaIcon(views)) return true;
@@ -132,7 +132,7 @@ public class TestCaseHelper {
 
     public void takeScreenShot(String name) {
         name = getFormatDate(null) + "_" + Constant.Temp.TEST_ID + "_" + name;
-        testHelper.takeScreenshot(name.replaceAll(" ", "_"), screenShotFolder);
+        testHelper.takeScreenshot(name.replaceAll(" ", "_"), ScreenShotFolder);
     }
 
     public boolean enableInstallationFromUnknownSources() {
