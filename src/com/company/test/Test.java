@@ -88,7 +88,8 @@ public class Test {
         i(Description.TC267);
         Constant.Temp.TEST_ID = "TC267";
 
-        testCase = new TestCase("TC267", "android-entrada_Install_Create PIN");
+        testCases.add(new TestCase("TC267", "android-entrada_Install_Create PIN"));
+        testCase = testCases.get(testCases.size() - 1);
 
         if(!testCaseHelper.reinstallEntradaViaAdb()) {
             return;
@@ -160,15 +161,15 @@ public class Test {
             i("Entrada app is not closed");
             testCase.addExpectedResult(new ExpectedResult("Entrada app is closed. PIN has been created.", false));
         }
-
-        testCases.add(testCase);
     }
 
     public void tc265() {
         i(Description.TC265);
         Constant.Temp.TEST_ID = "TC265";
 
-        testCase = new TestCase("TC265", "android-entrada_Un-Install_OK");
+        testCases.add(new TestCase("TC265", "android-entrada_Un-Install_OK"));
+        testCase = testCases.get(testCases.size() - 1);
+
         testCaseHelper.openAppsScreen();
 
         ArrayList<View> views = testHelper.getCurrentViews(android.widget.TextView.class);
@@ -182,7 +183,6 @@ public class Test {
                 tc265();
             } else {
                 i("can not install Entrada application");
-//                testCases.add(testCase);
                 return;
             }
         } else {
@@ -190,17 +190,16 @@ public class Test {
             testCaseHelper.uninstallEntrada(testCase);
         }
         i(testCase.toString());
-        testCases.add(testCase);
     }
 
     public void tc122() {
         i(Description.TC122);
         Constant.Temp.TEST_ID = "TC122";
 
-        testCase = new TestCase("TC122", "android_entrada_Install_Install");
+        testCases.add(new TestCase("TC122", "android_entrada_Install_Install"));
+        testCase = testCases.get(testCases.size() - 1);
 
         if(!openInstallationScreen(TestNamesEnum.TC122)){
-//            testCases.add(testCase);
             return;
         }
 
@@ -214,7 +213,6 @@ public class Test {
             i("installing dialog did not appear");
             testCase.addExpectedResult(new ExpectedResult("Entrada Installing window will be displayed while it installs. App installed displays when completed.", false));
             testCaseHelper.takeScreenShot("installing_dialog_fail");
-            testCases.add(testCase);
             return;
         }
 
@@ -225,7 +223,6 @@ public class Test {
         } else {
             i("install completed dialog did not appear");
             testCaseHelper.takeScreenShot("install__completed_dialog_fail");
-            testCases.add(testCase);
             return;
         }
 
@@ -242,14 +239,15 @@ public class Test {
             testCase.addExpectedResult(new ExpectedResult("Install is complete. Icon will be placed on the device home screen.", false));
             testCaseHelper.takeScreenShot("entrada_icon_is_not_found_on_home_screen");
         }
-        testCases.add(testCase);
     }
 
     public void tc266() {
         i(Description.TC266);
         Constant.Temp.TEST_ID = "TC266";
 
-        testCase = new TestCase("TC266", "android-entrada_Install_Cancel");
+        testCases.add(new TestCase("TC266", "android-entrada_Install_Cancel"));
+
+        testCase = testCases.get(testCases.size() - 1);
 
         testHelper.pressHome();
 
@@ -257,60 +255,48 @@ public class Test {
         testHelper.sleep(1000);
         ArrayList<View> views = testHelper.getCurrentViews(android.widget.TextView.class);
 
-        if(!openInstallationScreen(TestNamesEnum.TC266)) return;
+        testCaseHelper.takeScreenShot("screen_before_installation");
+
+        if(!openInstallationScreen(TestNamesEnum.TC266)) {
+            return;
+        }
         if(testHelper.waitForExistsByText("cancel", 10000, false) && testHelper.waitForExistsByText("next", 1, false)){
             testCase.addExpectedResult(new ExpectedResult("Do you want to install this application? IT will get access to: window will be displayed. Cancel and Next button will be displayed.", true));
-            i("Cancel and Next buttons displayed");
-            testCaseHelper.takeScreenShot("Cancel_and_Next_buttons_displayed");
+            i("Cancel and Next buttons are displayed");
+            testCaseHelper.takeScreenShot("cancel_and_next_buttons_are_displayed");
         } else {
             testCase.addExpectedResult(new ExpectedResult("Do you want to install this application? IT will get access to: window will be displayed. Cancel and Next button will be displayed.", false));
-            i("Cancel and Next buttons not displayed");
-            testCaseHelper.takeScreenShot("Cancel_and_Next_buttons_not_displayed");
-            testCases.add(testCase);
+            i("Cancel and Next buttons are not displayed");
+            testCaseHelper.takeScreenShot("cancel_and_Next_buttons_are_not_displayed");
             return;
         }
 
         View cancel = testHelper.getViewByText("cancel", false);
         cancel.click();
         //todo add logic to check screens before launching of installing dialog and click button to cancel
-//        if(!testCaseHelper.isScreenChanged(testHelper.getCurrentViews(android.widget.TextView.class), views)) {
-            testCase.addExpectedResult(new ExpectedResult("Install will be cancelled. .apk file will be displayed.", true));
-            i("Displayed screen which was before installing");
-            testCaseHelper.takeScreenShot("screen_is_not_changed");
-//        } else {
-//            testCase.addExpectedResult(new ExpectedResult("Install will be cancelled. .apk file will be displayed.", false));
-//            i("Displayed screen which different from screen which was before installing");
-//            testCaseHelper.takeScreenShot("screen_is__changed");
-//        }
+        testCase.addExpectedResult(new ExpectedResult("Install will be cancelled. .apk file will be displayed.", true));
+        i("Displayed screen which was before installing");
+        testCaseHelper.takeScreenShot("screen_after_click_cancel");
         if(!openInstallationScreen(TestNamesEnum.TC266)) {
-//            testCases.add(testCase);
             return;
         }
-        if(!testCaseHelper.waitForTextAndClick("next", false)){
+        if(!testCaseHelper.waitForTextAndClick("next", false, "cancel_and_next_buttons_are_displayed")){
             i("next button is not found");
-            testCaseHelper.takeScreenShot("next button is not found");
-            testCases.add(testCase);
+            testCaseHelper.takeScreenShot("cancel_and_Next_buttons_are_not_displayed");
             return;
         }
+        testHelper.sleep(1000);
 
-        if(!testCaseHelper.waitForTextAndClick("cancel", false)){
+        if(!testCaseHelper.waitForTextAndClick("cancel", false, "cancel_and_install_buttons_are_displayed")){
             i("cancel button is not found");
-            testCaseHelper.takeScreenShot("cancel button is not found");
-            testCases.add(testCase);
+            testCaseHelper.takeScreenShot("cancel_and_install_buttons_are_not_displayed");
             return;
         }
 
         //todo add logic to check screens before launching of installing dialog and click button to cancel
-//        if(!testCaseHelper.isScreenChanged(testHelper.getCurrentViews(android.widget.TextView.class), views)) {
-            testCase.addExpectedResult(new ExpectedResult("Install will be cancelled. .apk file will be displayed.", true));
-            i("Displayed screen which was before installing");
-            testCaseHelper.takeScreenShot("screen_is_not_changed");
-//        } else {
-//            testCase.addExpectedResult(new ExpectedResult("Install will be cancelled. .apk file will be displayed.", false));
-//            i("Displayed screen which different from screen which was before installing");
-//            testCaseHelper.takeScreenShot("screen_is_not_changed");
-//        }
-        testCases.add(testCase);
+        testCase.addExpectedResult(new ExpectedResult("Install will be cancelled. .apk file will be displayed.", true));
+        i("Displayed screen which was before installing");
+        testCaseHelper.takeScreenShot("screen_after_click_cancel");
     }
 
     private boolean openInstallationScreen(TestNamesEnum testNamesEnum){

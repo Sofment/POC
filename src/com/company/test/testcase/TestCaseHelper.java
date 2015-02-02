@@ -198,10 +198,17 @@ public class TestCaseHelper {
     }
 
     public boolean waitForTextAndClick(String text, boolean isFullMatch) {
+        return waitForTextAndClick(text, isFullMatch, null);
+    }
+
+    public boolean waitForTextAndClick(String text, boolean isFullMatch, String screenShotName) {
         if(!testHelper.waitForExistsByText(text, 10000, isFullMatch)) {
             i(text + " does not exist");
             takeScreenShot(text + "_is_not_found");
             return false;
+        }
+        if(screenShotName != null) {
+            takeScreenShot(screenShotName);
         }
         View next = testHelper.getViewByText(text, isFullMatch, false);
         i("click on text: " + text);
