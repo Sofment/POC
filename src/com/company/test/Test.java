@@ -274,6 +274,7 @@ public class Test {
         View cancel = testHelper.getViewByText("cancel", false);
         cancel.click();
         //todo add logic to check screens before launching of installing dialog and click button to cancel
+        testHelper.sleep(1000);
         testCase.addExpectedResult(new ExpectedResult("Install will be cancelled. .apk file will be displayed.", true));
         i("Displayed screen which was before installing");
         testCaseHelper.takeScreenShot("screen_after_click_cancel");
@@ -294,6 +295,8 @@ public class Test {
         }
 
         //todo add logic to check screens before launching of installing dialog and click button to cancel
+
+        testHelper.sleep(1000);
         testCase.addExpectedResult(new ExpectedResult("Install will be cancelled. .apk file will be displayed.", true));
         i("Displayed screen which was before installing");
         testCaseHelper.takeScreenShot("screen_after_click_cancel");
